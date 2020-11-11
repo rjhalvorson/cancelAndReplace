@@ -1,0 +1,157 @@
+<template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+          <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+                <lightning-icon icon-name="standard:contract" variant="inverse" size="small"></lightning-icon>
+            </div>
+            <div class="slds-media__body">
+              <h2 class="slds-card__header-title">
+                <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Cancel & Replace">
+                  <span>{label.cancelAndReplaceHeader}</span>
+                </a>
+              </h2>
+            </div>
+            <div class="slds-no-flex">
+              <button class="slds-button slds-button_neutral" disabled={contractsNotSelected} onclick={openModal}>{label.cancelAndReplaceButton}</button>
+            </div>
+          </header>
+        </div>
+
+        <div class="slds-card__body slds-card__body_inner">
+
+            <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
+                <div style="display: none;">
+                    <div class="slds-text-heading_medium">$2,200,000</div>
+                    <div class="slds-text-title_caps">{label.netAmount}</div>
+                </div>
+                <div class="slds-col_bump-left">
+                    <div><input type="checkbox" name="options" id="checkbox-unique-id-73" value="checkbox-unique-id-73" onchange={handleChildContractsIncluded} checked={childContractsIncluded} style="float: right;"/></div>
+                    <div style="float: right;">{label.includeChildContracts}</div>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-m-top_medium slds-m-bottom_medium">
+                <c-go-to-new-quote class="slds-align_absolute-center" style="width: 100%;" quote-id={quoteId} quote-name={quoteName} if:true={displayGoToNewQuoteCard}></c-go-to-new-quote>
+            </div>
+
+            <div class="slds-p-around_x-small slds-m-bottom_small active-contracts-table-banner">
+                {label.contracts}:
+            </div>
+        
+            <!-- EMPTY STATE - NO RECORDS FOUND -->
+            <article class="slds-card complete-container slds-p-top_x-large" if:true={noDataFound}>
+                <div class="slds-illustration slds-illustration_small">
+                    <img
+                        src="/img/chatter/OpenRoad.svg"
+                        class="slds-illustration__svg"
+                        alt=""
+                    />
+                  <div class="slds-text-longform">
+                    <h3 class="slds-text-heading_medium">{label.noActiveContractsFound}</h3>
+                  </div>
+                </div>
+            </article>
+
+            <!-- RECORDS FOUND. SHOW TABLE. -->
+            <table aria-multiselectable="true" class="slds-table slds-table_cell-buffer slds-table_header-hidden" if:false={noDataFound}>
+                <thead class="slds-assistive-text">
+                <tr class="slds-line-height_reset">
+                    <th class="slds-text-align_right" scope="col" style="width:3.25rem">
+                        <span id="column-group-header" class="slds-assistive-text">Choose a row</span>
+                        <div class="slds-th__action slds-th__action_form">
+                            <div class="slds-checkbox">
+                            <input type="checkbox" name="options" id="checkbox-unique-id-297" value="checkbox-unique-id-297" tabindex="0" aria-labelledby="check-select-all-label column-group-header" />
+                            <label class="slds-checkbox__label" for="checkbox-unique-id-297" id="check-select-all-label">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label slds-assistive-text">Select All</span>
+                            </label>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.account}>{label.account}</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="AccountName">AccountName</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.start}>{label.start}</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.endDate}>{label.endDate}</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.contractTerm}>{label.contractTerm}</div>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                    <template for:each={activeContracts} for:item="contract">
+                        <tr aria-selected="false" class={contract.customRowClass} key={contract.id} data-id={contract.updateInProgress}>
+                            <td role="gridcell" if:false={contract.updateInProgress}>
+                                <div class="slds-checkbox">
+                                    <input type="checkbox" name="contractCheckbox" id={contract.contractNumber} value={contract.id} tabindex="0" onchange={contractSelected} aria-labelledby="check-button-label-01 column-group-header" />
+                                    <label class="slds-checkbox__label" for={contract.contractNumber} id={contract.id}>
+                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-form-element__label slds-assistive-text">Select {contract.accountName}</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <th data-label={label.account} scope="row">
+                                <div class="slds-truncate" title="">
+                                    <a onclick={goToContract} data-id={contract.id} tabindex="-1">{contract.contractNumber}</a>
+                                    <div class="active-contracts-table-header">{label.account}:</div>
+                                </div>
+                            </th>
+                            <th data-label="AccountName" scope="row">
+                                <div class="slds-truncate" title="" style="margin-top: 18px;">
+                                    <div>{contract.accountName}</div>
+                                </div>
+                            </th>
+                            <td data-label={label.start}>
+                                <div class="active-contracts-table-header">{label.start}</div>
+                                <div class="slds-truncate" title={contract.startDate}>{contract.startDate}</div>
+                            </td>
+                            <td data-label={label.endDate}>
+                                <div class="active-contracts-table-header">{label.endDate}</div>
+                                <div class="slds-truncate" title={contract.terminationDate}>{contract.terminationDate}</div>
+                            </td>
+                            <td data-label={label.contractTerm}>
+                                <div class="active-contracts-table-header">{label.contractTerm}</div>
+                                <div class="slds-truncate" title={contract.contractTerm}>{contract.contractTerm}</div>
+                            </td>
+                            <td data-label={label.updating} if:true={contract.updateInProgress}>
+                                <span class="slds-badge slds-p-around_x-small slds-p-right_medium slds-p-left_medium slds-theme_inverse" style="background-color: rgb(255, 154, 60);">
+                                    <span>{label.updating} ...</span>
+                                </span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        <footer class="slds-card__footer" if:false={noDataFound}>
+            <a class="slds-card__footer-action" onclick={viewAllContracts} if:false={viewingAllRecords}>View All
+                <span class="slds-assistive-text">Accounts</span>
+            </a>
+            <a class="slds-card__footer-action" onclick={viewFiveContracts} if:true={viewingAllRecords}>View Less
+                <span class="slds-assistive-text">Accounts</span>
+            </a>
+         </footer>
+      </article>
+
+    <template if:true={isLoading}>
+        <lightning-spinner
+            size="large"
+            alternative-text="Loading"
+        ></lightning-spinner>
+    </template>
+
+    <c-cancel-and-replace-modal selected-contracts={listOfSelectedContracts} 
+                                onshowtoast={showToast} 
+                                onmarkcontractupdating={markContractUpdating}
+                                onunselectallcontracts={unSelectAllContracts}
+                                account-id={recordId}></c-cancel-and-replace-modal>
+</template>

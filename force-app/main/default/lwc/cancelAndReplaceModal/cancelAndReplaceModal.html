@@ -1,0 +1,79 @@
+<template>
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="slds-modal"
+    >
+      <div class="slds-modal__container custom-skill-modal-container">
+        <header class="slds-modal__header">
+          <lightning-button-icon
+            icon-name="utility:close"
+            variant="container"
+            size="medium"
+            class="slds-modal__close slds-button_icon-inverse"
+            onclick={close}
+          ></lightning-button-icon>
+          <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+            {label.chooseADate}
+          </h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input autofill="off" type="date" name="input1" onchange={checkTheDate} label={label.whenDoYouWantToStart} class="date"></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="number" onchange={checkTheForm} label={label.term} class="term" required></lightning-input>
+                </div>
+            </div>
+            <!-- SECOND ROW IF INPUT FIELDS -->
+            <div class="slds-grid slds-gutters slds-m-top_large">
+                <div class="slds-col slds-size_1-of-2">
+                 <lightning-input onchange={checkTheForm} maxlength=120 label={label.opportunity} class="opportunity" required></lightning-input>
+              </div>
+              <div class="slds-col slds-size_1-of-2">
+                <lightning-combobox
+                  name="stage"
+                  label={label.stage}
+                  value={value}
+                  class="selectedstage"
+                  options={opportunityStageValues}
+                  onchange={checkTheForm} >
+                </lightning-combobox>
+             </div>
+            </div>
+            <div class="custom-error" if:true={showCreateAmendmentsError}>{label.amendmentError}</div>
+
+            <template if:true={isLoading}>
+              <lightning-spinner
+                  style="height: 330px; top: 33vh"
+                  size="large"
+                  alternative-text="Loading"
+              ></lightning-spinner>
+            </template>
+        
+        </div>
+        <footer class="slds-modal__footer">
+          <lightning-button
+            variant="neutral"
+            name="cancel"
+            label={label.cancel}
+            onclick={close}
+          ></lightning-button>
+          <lightning-button
+          variant="brand"
+          name="continue"
+          label={label.continueBtn}
+          class="slds-float_right slds-m-bottom_small continue-button"
+          onclick={handleContinueClick}
+          disabled={disableContinueBtn}
+        ></lightning-button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop"></div>
+  </template>
+  

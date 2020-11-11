@@ -1,0 +1,11 @@
+{
+  "packageDirectories": [
+    { "path": "force-app", "default": true },
+    { "path": "force-app/main/CSLogger" },
+    { "path": "force-app/main/unpackaged"},
+    { "path": "force-app/main/CRUDFLS" }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "49.0"
+}

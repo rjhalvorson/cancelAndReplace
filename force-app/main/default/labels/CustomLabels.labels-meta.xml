@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>account</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component table account header text</shortDescription>
+        <value>Account</value>
+    </labels>
+    <labels>
+        <fullName>cancelAndReplaceHeader</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component header text (Related Tab)</shortDescription>
+        <value>Contract Management</value>
+    </labels>
+    <labels>
+        <fullName>cancelAndReplaceBtn</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component button text (Related Tab)</shortDescription>
+        <value>Cancel &amp; Replace</value>
+    </labels>
+    <labels>
+        <fullName>contractTerm</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component table contract term header text</shortDescription>
+        <value>Contract Term</value>
+    </labels>
+    <labels>
+        <fullName>contracts</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component table banner text</shortDescription>
+        <value>Contracts</value>
+    </labels>
+    <labels>
+        <fullName>endDate</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component table end date header text</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>start</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component table start (date) header text</shortDescription>
+        <value>Start</value>
+    </labels>
+    <labels>
+        <fullName>noActiveContractsFound</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component empty state text.</shortDescription>
+        <value>No active contracts found.</value>
+    </labels>
+    <labels>
+        <fullName>includeChildContracts</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Active account component Include child contracts checkbox label text.</shortDescription>
+        <value>Include Account Hierarchy</value>
+    </labels>
+    <labels>
+        <fullName>netAmount</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Net amount label text.</shortDescription>
+        <value>Net amount</value>
+    </labels>
+    <labels>
+        <fullName>cancel</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel button txt.</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>continue</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Continue button txt.</shortDescription>
+        <value>Continue</value>
+    </labels>
+    <labels>
+        <fullName>chooseADate</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and replace modal header for step 1.</shortDescription>
+        <value>Choose a Date</value>
+    </labels>
+    <labels>
+        <fullName>term</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Term input label for CandR modal.</shortDescription>
+        <value>Term</value>
+    </labels>
+    <labels>
+        <fullName>whenDoYouWantToStart</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Calendar input label for CandR modal.</shortDescription>
+        <value>When do you want to start?</value>
+    </labels>
+    <labels>
+        <fullName>dateIsInThePastWarning</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Past date toast warning message text.</shortDescription>
+        <value>You are attempting a back dated transaction</value>
+    </labels>
+    <labels>
+        <fullName>ReplacementQuoteUpdateError</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Replacement Quote {0}, failed to update: {1}</shortDescription>
+        <value>Replacement Quote {0}, failed to update: {1}</value>
+    </labels>
+    <labels>
+        <fullName>DAE_BadQuery</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Bad Query</shortDescription>
+        <value>The supplied SOQL query could not be parsed/validated.</value>
+    </labels>
+    <labels>
+        <fullName>DAE_BadRelationshipName</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Bad Relationship Name</shortDescription>
+        <value>Subquery through relationship &quot;{0}&quot; does not exist. Bad relationship name?</value>
+    </labels>
+    <labels>
+        <fullName>DAE_FieldDoesNotExist</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Field Does Not Exist</shortDescription>
+        <value>Field &quot;{0}&quot; on object &quot;{1}&quot; does not exist.</value>
+    </labels>
+    <labels>
+        <fullName>DAE_FieldNotAccessible</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Field Not Accessible</shortDescription>
+        <value>&quot;{0}&quot; permission to field &quot;{2}&quot; on object &quot;{1}&quot; is not allowed for the current user.</value>
+    </labels>
+    <labels>
+        <fullName>DAE_ObjectNotAccessible</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Object Not Accessible</shortDescription>
+        <value>&quot;{0}&quot; permission to object &quot;{1}&quot; is not allowed for the current user.</value>
+    </labels>
+    <labels>
+        <fullName>DAE_InvalidExternalId</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Invalid External Id</shortDescription>
+        <value>Field &quot;{0}&quot; on object &quot;{1}&quot; is not a valid External Id.</value>
+    </labels>
+    <labels>
+        <fullName>DAE_DuplicateRecordForUpsert</fullName>
+        <categories>Exception</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DAE: Duplicate Record For Upsert</shortDescription>
+        <value>Duplicate records with External Id &quot;{0}&quot; were specified in an upsert call.</value>
+    </labels>
+    <labels>
+        <fullName>opportunity</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for opportunity label.</shortDescription>
+        <value>Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>stage</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for stage label.</shortDescription>
+        <value>Stage</value>
+    </labels>
+    <labels>
+        <fullName>updating</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for updating label.</shortDescription>
+        <value>Updating</value>
+    </labels>
+    <labels>
+        <fullName>amendmentError</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for when there is an error creating amendements.</shortDescription>
+        <value>Error on creating amendments.</value>
+    </labels>
+    <labels>
+        <fullName>goToQuoteDesc</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for GoToQuote card description.</shortDescription>
+        <value>Go to the new quote and hit 'Ordered' to finalize</value>
+    </labels>
+    <labels>
+        <fullName>havePendingChanges</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for GoToQuote card main header.</shortDescription>
+        <value>have pending changes</value>
+    </labels>
+    <labels>
+        <fullName>goToNewQuote</fullName>
+        <categories>CancelAndReplace</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for GoToQuote card button.</shortDescription>
+        <value>Go to New Quote</value>
+    </labels>
+</CustomLabels>

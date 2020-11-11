@@ -1,0 +1,13 @@
+.continue-button {
+    margin-left: 10px;
+}
+
+.custom-error {
+    color: red;
+    margin-top: 10px;
+}
+
+.slds-modal__content {
+    height: 220px;
+    overflow: initial;
+} 

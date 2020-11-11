@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sync_QuoteStartDate__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If marked True, updating the Quote Start Date on the Replacement Quote updates the Start Date on the Amended Quotes.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>If marked True, updating the Quote Start Date on the Replacement Quote updates the Start Date on the Amended Quotes.</inlineHelpText>
+    <label>Sync Quote Start Date</label>
+    <type>Checkbox</type>
+</CustomField>

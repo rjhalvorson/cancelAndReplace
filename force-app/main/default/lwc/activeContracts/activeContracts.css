@@ -1,0 +1,27 @@
+.active-contracts-table-banner {
+    background-color: #f3f2f2;
+    color: rgb(112, 110, 107);
+    font-size: 13px;
+}
+
+.active-contracts-table-header {
+    color: rgb(112, 110, 107);
+}
+
+table tbody tr {
+    margin-bottom: 22px;
+}
+
+.slds-hint-parent {
+    height: 70px;
+}
+
+.orange-background {
+    background-color: #fce5c4;
+    color: black;
+}
+
+.orange-background th div a {
+    color: black;
+    text-decoration: underline;
+}

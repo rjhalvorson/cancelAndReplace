@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layoutAssignments>
+        <layout>Account-Dev CPQ Account Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Contract-Dev CPQ Contract Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Log_Settings__mdt-Log_Settings Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Log__c-Log Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Opportunity-Dev CPQ Opportunity Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Order-Dev CPQ Order Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Product2-Dev CPQ Product Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>SBQQ__QuoteLine__c-Dev Quote Line Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>SBQQ__Quote__c-Dev CPQ Quote</layout>
+    </layoutAssignments>
+</Profile>

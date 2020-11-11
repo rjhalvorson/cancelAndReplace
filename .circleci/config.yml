@@ -1,0 +1,154 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.9.4-browsers
+    steps:
+      - checkout
+      - run:
+          name: "Install SFDX & PMD"
+          command: |
+            wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJf -
+            ./sfdx-cli-*/install
+            ./pmd/pmd_install.sh
+      - run:
+          name: "Install Build Dependencies"
+          command: |
+            npm install
+            mkdir -p /tmp/artifacts/test_results
+            mkdir -p /tmp/artifacts/screenshots
+            mkdir -p artifacts/pmd
+      - run:
+          name: "Authenticate to Devhub"
+          command: |
+            #authenticate to DXHUB
+            echo $SFDXURL_HUB > /tmp/sfdx.url
+            sfdx force:auth:sfdxurl:store -f /tmp/sfdx.url -a circle_build_$CIRCLE_BUILD_NUM --setdefaultdevhubusername
+      - run:
+          name: "Authenticate to managed-int "
+          command: |
+            #authenticate to int
+            echo $SFDXURL_MGD_INTEGRATION > /tmp/sfdx_int.url
+            sfdx force:auth:sfdxurl:store -f /tmp/sfdx_int.url -a int_org
+      - run:
+          name: "Authenticate to managed-qa"
+          command: |
+            #authenticate to qa
+            if [[ $CIRCLE_BRANCH == "managed-qa" ]];
+            then
+              echo $SFDXURL_MGD_QA > /tmp/sfdx_qa.url
+              sfdx force:auth:sfdxurl:store -f /tmp/sfdx_qa.url -a qa_org
+            fi
+      - run:
+          name: "Authenticate to PreRelease"
+          command: |
+            #authenticate to prerelease
+            if [[ $CIRCLE_BRANCH == "managed-prerelease" ]];
+            then
+              echo $SFDXURL_MGD_PRERELEASE > /tmp/sfdx_prerelease.url
+              sfdx force:auth:sfdxurl:store -f /tmp/sfdx_prerelease.url -a prerelease_org
+            fi
+      - run:
+          name: "Authenticate to opensource-int"
+          command: |
+            #authenticate to opensource-int
+            if [[ $CIRCLE_BRANCH == "opensource-integration" ]];
+            then
+              echo $SFDXURL_OPEN_INT > /tmp/sfdx_open_int.url
+              sfdx force:auth:sfdxurl:store -f /tmp/sfdx_open_int.url -a open_int_org
+            fi
+      - run:
+          name: "Authenticate to opensource-qa"
+          command: |
+            #authenticate to opensource-qa
+            if [[ $CIRCLE_BRANCH == "opensource-qa" ]];
+            then
+              echo $SFDXURL_OPEN_QA > /tmp/sfdx_open_qa.url
+              sfdx force:auth:sfdxurl:store -f /tmp/sfdx_open_qa.url -a open_qa_org
+            fi
+      - run:
+          name: "Run PMD Source Code Scanner"
+          command: |
+            #run pmd source scanner
+            echo "Running PMD source code scanner"
+            ./pmd/pmd_scan.sh
+      - store_artifacts:
+          destination: ./artifacts/pmd
+          path: pmd/results
+      
+      - run:
+          name: "Deploy To Non-scratch Orgs"
+          command: |
+            #convert DX to legacy metadata
+            ./dx-utils/convert_to_metadata.sh
+
+            # Clean the package.xml of stuff that shouldn't be there
+            ./dx-utils/clean_package_xml.js
+
+            cp -pr deploy /tmp/artifacts/deploy
+
+            #integration
+            if [[ $CIRCLE_BRANCH == "managed-integration" ]];
+            then
+              #deploy source from integration branch to int org
+              echo "deploy source from $CIRCLE_BRANCH/force-app/main to int org"
+              ./dx-utils/deploy.sh int_org
+
+              #deploy destructive changes from integration branch to int org
+              echo "deploy destructive changes from $CIRCLE_BRANCH/destructive to int org"
+              ./dx-utils/destructive.sh int_org
+            fi
+
+            #qa
+            if [[ $CIRCLE_BRANCH == "managed-qa" ]];
+            
+            then
+              #deploy source from qa branch to managed-qa org
+              echo "deploy source from $CIRCLE_BRANCH/force-app/main to managed-qa org"
+              ./dx-utils/deploy.sh qa_org
+
+              #deploy destructive changes from qa branch to qa org
+              echo "deploy destructive changes from $CIRCLE_BRANCH/destructive to managed-qa org"
+              ./dx-utils/destructive.sh qa_org
+            fi
+
+            #prerelease
+            if [[ $CIRCLE_BRANCH == "managed-prerelease" ]];
+            then
+              #deploy source from prerelease branch to prerelease org
+              echo "deploy source from $CIRCLE_BRANCH/force-app/main to prerelease org"
+              ./dx-utils/deploy.sh prerelease_org
+
+              #deploy destructive changes from prerelease branch to qa prerelease
+              echo "deploy destructive changes from $CIRCLE_BRANCH/destructive to prerelease org"
+              ./dx-utils/destructive.sh prerelease_org
+            fi
+
+            #opensource-integration
+            if [[ $CIRCLE_BRANCH == "opensource-integration" ]];
+            then
+              #deploy source from opensource-integration branch to opensource-integration org
+              echo "deploy source from $CIRCLE_BRANCH/force-app/main to opensource-integration org"
+              ./dx-utils/deploy.sh open_int_org
+
+              #deploy destructive changes from opensource-integration branch to opensource-integration org
+              echo "deploy destructive changes from $CIRCLE_BRANCH/destructive to opensource-integration org"
+              ./dx-utils/destructive.sh open_int_org
+            fi
+
+            #opensource-qa
+            if [[ $CIRCLE_BRANCH == "opensource-qa" ]];
+            then
+              #deploy source from opensource-qa branch to opensource-qa org
+              echo "deploy source from $CIRCLE_BRANCH/force-app/main to opensource-qa org"
+              ./dx-utils/deploy.sh open_qa_org
+
+              #deploy destructive changes from opensource-qa branch to opensource-qa org
+              echo "deploy destructive changes from $CIRCLE_BRANCH/destructive to opensource-qa org"
+              ./dx-utils/destructive.sh open_qa_org
+            fi
+
+          
+      - store_artifacts:
+          destination: ./artifacts
+          path: /tmp/artifacts

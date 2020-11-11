@@ -1,0 +1,5 @@
+## The cpq package to install
+SBQQ_PACKAGE_ID=04t4N000000YTOgQAO
+
+## The default length of a scratch org.
+DEFAULT_SCRATCH_ORG_LENGTH=7

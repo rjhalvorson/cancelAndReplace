@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sync_Orders__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If marked True, initiating an Order for a Cancelled and Replaced Quote will Order the Amendment Quotes automatically.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>If marked True, initiating an Order for a Cancelled and Replaced Quote will Order the Amendment Quotes automatically.</inlineHelpText>
+    <label>Sync Orders</label>
+    <type>Checkbox</type>
+</CustomField>

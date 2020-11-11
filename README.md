@@ -1,13 +1,18 @@
+**Salesforce CPQ - Cancel and Replace**
 
-# Salesforce CPQ - Cancel and Replace
+License
 
-Cancel & Replace is a common feature requested on top of the CPQ (Steelbrick) product.  Cancel and Replace provides automation for a CPQ User to:
+THIS APPLICATION IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, CONSEQUENTIAL OR SIMILAR DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS APPLICATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+SUBJECT TO THE FOREGOING, THIS APPLICATION MAY BE FREELY REPRODUCED, DISTRIBUTED, TRANSMITTED, USED, MODIFIED, BUILT UPON, OR OTHERWISE EXPLOITED BY OR ON BEHALF OF SALESFORCE.COM OR ITS AFFILIATES, ANY CUSTOMER OR PARTNER OF SALESFORCE.COM OR ITS AFFILIATES, OR ANY DEVELOPER OF APPLICATIONS THAT INTERFACE WITH THE SALESFORCE.COM APPLICATION, FOR ANY PURPOSE, COMMERCIAL OR NON-COMMERCIAL, RELATED TO USE OF THE SALESFORCE.COM APPLICATION, AND IN ANY WAY, INCLUDING BY METHODS THAT HAVE NOT YET BEEN INVENTED OR CONCEIVED.
 
-1. Select one or more Contracts and automatically Cancel the old contracts
-2. Generate an Amended Quote for each Contract (Amendment Quotes are reciprical Quotes to the original with a negative amount so when added the original + amendment = zero)
-3. Generate an Amendment Opportunity related to each Amendment Quote
-4. Generate a Replacement Quote with all Quote Line Items from the original Quotes aggregrated and cleansed.
-5. enerate a Replacement Opportunity related to the New Replacement Quote.
+Documentation Link: https://salesforce.quip.com/KXBRArvmUQcG
+
+*OVERVIEW*
+
+One of the most common scenarios not supported directly with amendments is the ability to combine multiple contracts onto into a single contract and EXTEND that contract beyond the original term. From a functionality perspective, this is known as *Cancel & Replace*, as the original contracts are cancelled with negative orders and a new quote is created for the customer going forward.
+
+The Cancel & Replace framework is designed to provide a *pattern* for advanced contract manipulation via customization. While you may choose to install the managed package from the app exchange, the full codebase will be released as open source software available on Github.
+
 
 ## Code Style and Formatting
 

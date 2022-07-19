@@ -93,7 +93,8 @@ private class AccountCancelReplaceControllerTest {
                 SBQQ__Opportunity__c = opp.Id,
                 SBQQ__Quote__c = quote.Id,
                 StartDate = System.today().addDays(1),
-                ContractTerm = 11
+                EndDate = System.today().addDays(366),
+                ContractTerm = 12
             );
             insert contract;
             contract.Status = 'Activated';
@@ -106,7 +107,6 @@ private class AccountCancelReplaceControllerTest {
                 '5'
             );
             Test.stopTest();
-
             System.assertEquals(1, contracts.size(), 'We should not have any contracts for an account');
         }
 
@@ -167,7 +167,9 @@ private class AccountCancelReplaceControllerTest {
                 AccountId = account.Id,
                 SBQQ__Opportunity__c = opp.Id,
                 SBQQ__Quote__c = quote.Id,
-                StartDate = System.today()
+                StartDate = System.today(),
+                EndDate = System.today().addDays(365),
+                ContractTerm = 12
             );
             insert contract;
             contract.Status = 'Activated';
@@ -175,19 +177,16 @@ private class AccountCancelReplaceControllerTest {
 
             // Act
             Test.startTest();
+            System.debug(contract);
             AmendContractsMsg amendContractMsg = new AmendContractsMsg();
             amendContractMsg.contractIds = new List<String>{ contract.Id };
-            amendContractMsg.startDate = String.valueOf(System.today());
+            amendContractMsg.startDate = String.valueOf(System.today().addDays(65));
             amendContractMsg.opportunityStage = 'Prospecting';
             amendContractMsg.opportunityName = 'Test Name';
             amendContractMsg.accountId = account.Id;
             amendContractMsg.termLength = 24;
             AmendContractJobMsg jobmsg = AccountCancelReplaceController.amendContracts(amendContractMsg);
-            List<String> jobIds = new List<String>();
-            for (AmendContractJobMsg.JobStatus job : jobmsg.jobs) {
-                jobIds.add(job.jobId);
-            }
-            List<AmendContractJobStatusMsg> jobStatuses = AccountCancelReplaceController.getJobStatus(jobIds);
+            System.debug(jobmsg);
             Test.stopTest();
 
             // Assert
@@ -214,9 +213,24 @@ private class AccountCancelReplaceControllerTest {
                 'Start Date should have been set to the value we passed in'
             );
             System.assertEquals(1, newQuote.ChildQuotes__r.size());
-            System.assertEquals(1, jobStatuses.size());
         }
 
+    }
+
+    @IsTest
+    private static void testNamespacePrefix() {
+        Test.startTest();
+        String prefix = AccountCancelReplaceController.getNamespacePrefix();
+        Test.stopTest();
+    }
+
+    @IsTest
+    private static void testException() {
+        Test.startTest();
+        try{
+            QuoteLineQueueable.updateQuotes(null);
+        }catch(Exception e){}
+        Test.stopTest();
     }
 
     @IsTest

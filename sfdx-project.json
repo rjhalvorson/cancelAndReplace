@@ -1,11 +1,32 @@
 {
-  "packageDirectories": [
-    { "path": "force-app", "default": true },
-    { "path": "force-app/main/CSLogger" },
-    { "path": "force-app/main/unpackaged"},
-    { "path": "force-app/main/CRUDFLS" }
-  ],
-  "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "49.0"
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "package": "cancel-replace",
+            "default": true,
+            "versionNumber": "2.0.0.NEXT"
+        },
+        {
+            "path": "force-app/main/CSLogger"
+        },
+        {
+            "path": "force-app/main/unpackaged"
+        },
+        {
+            "path": "force-app/main/CRUDFLS"
+        },
+        {
+            "path": "force-app",
+            "package": "cancel_replace",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT",
+            "default": false
+        }
+    ],
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "49.0",
+    "packageAliases": {
+        "cancel_replace": "0Ho4W000000fy4MSAQ"
+    }
 }

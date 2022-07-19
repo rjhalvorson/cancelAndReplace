@@ -3,34 +3,28 @@ Name            : AsyncAmendAndZero
 Revision Log    : 8/12/2020 Bryan
                 :
                 :
-Use             : Process to amend one quote at a time
+Use             : Batchable process to amend previous contracts and create cancellation quotes
+                  Once the batch is finished, quote lines are added to replacement quote and calculated
+Update          : 7/19/2022
+Converted this class to function as Batchable instead of Queueable but 
+Since it is managed package and the class is Global
+Couldn't remove System.Queueable and it's execute method from class
 *****************************************************************************************/
-global with sharing class AsyncAmendAndZero implements Queueable, Database.AllowsCallouts, SBQQ.CalculateCallback {
+
+
+global with sharing class AsyncAmendAndZero implements System.Queueable, Database.Batchable<String>, Database.AllowsCallouts, SBQQ.CalculateCallback {
     ProductManager productManager { get; set; }
-    String contractId { get; set; }
+    List<String> contractIdList { get; set; }
     Date startDate { get; set; }
     String quoteId { get; set; }
     // Used to kick off another queueable to see if all of the amended contracts are done then creates
     // queue line items based off the amended contracts
-    Boolean calculateQuoteLines { get; set; }
-    Set<String> jobIds { get; set; }
     String namespace { get; set; }
 
-    public AsyncAmendAndZero(String contractId, String startDate, String quoteId) {
-        this(contractId, startDate, quoteId, false, new Set<String>());
-    }
-    public AsyncAmendAndZero(
-        String contractId,
-        String startDate,
-        String quoteId,
-        Boolean calculateQuoteLines,
-        Set<String> jobIds
-    ) {
-        this.contractId = contractId;
+    public AsyncAmendAndZero(List<String> contractIdList, String startDate, String quoteId) {
+        this.contractIdList = contractIdList;
         this.startDate = Date.valueOf(startDate);
         this.quoteId = quoteId;
-        this.calculateQuoteLines = calculateQuoteLines;
-        this.jobIds = jobIds;
         this.namespace = CancelAndReplaceUtility.getNamespace();
     }
 
@@ -38,16 +32,28 @@ global with sharing class AsyncAmendAndZero implements Queueable, Database.Allow
     global AsyncAmendAndZero() {
     }
 
-    public void execute(QueueableContext context) {
-        // Adding this job id to the jobIds list, this is for when we call the QuoteLineQueueable
-        // so we can check the status of all of the jobs before we process quote lines
-        jobIds.add(context.getJobId());
-        execute(context.getJobId());
+    public Iterable<String> start(Database.BatchableContext bc) {
+        return this.contractIdList;
     }
 
-    public void execute(String jobId) {
+    // Deprecated Ignore - Queuable execute is not used
+    public void execute(QueueableContext context) {
+    }
+
+    public void execute(Database.BatchableContext bc, List<String> contractIdList) {
+        // Adding this job id to the jobIds list, this is for when we call the QuoteLineQueueable
+        // so we can check the status of all of the jobs before we process quote lines
+        String jobId = bc.getJobId();
+        for(String contractId: contractIdList) {
+            execute(jobId, contractId);
+        }
+    }
+
+    public void execute(String jobId, String contractId) {
         try {
             productManager = new ProductManager();
+
+            // Creates cancellation quotes
             QuoteModel model = productManager.load(contractId);
             QuoteCalculator calculator = new QuoteCalculator();
             model = calculator.read(model.record.Id);
@@ -61,19 +67,26 @@ global with sharing class AsyncAmendAndZero implements Queueable, Database.Allow
             } else {
                 calculator.calculate(model, 'AsyncAmendAndZero');
             }
+
+            // Send the event back to LWC to update the status 
             createEvent(jobId, quoteId,contractId);
-            if (calculateQuoteLines) {
-                QuoteLineQueueable quoteLineQueueable = new QuoteLineQueueable(jobIds, quoteId);
-                // Test classes cannot chain queueables, we are just going to directly execute it
-                if (Test.isRunningTest()) {
-                    quoteLineQueueable.execute();
-                } else {
-                    System.enqueueJob(quoteLineQueueable);
-                }
-            }
+
         } catch (Exception e) {
             Logger.getInstance().log(AsyncAmendAndZero.class.getName(), e);
             throw new AmendAndZeroException(e.getMessage());
+        }
+    }
+
+    public void finish(Database.BatchableContext bc){
+        // QuoteLines are cloned from previous contracts to new quote and calculated
+        QuoteLineQueueable quoteLineQueueable = new QuoteLineQueueable(quoteId);
+        
+        // Test classes cannot chain queueables, we are just going to directly execute it
+        if (Test.isRunningTest()) {
+            System.debug(quoteLineQueueable);
+            quoteLineQueueable.execute();
+        } else {
+            System.enqueueJob(quoteLineQueueable);
         }
     }
 
@@ -95,6 +108,8 @@ global with sharing class AsyncAmendAndZero implements Queueable, Database.Allow
         }
     }
 
+    // Once the calculation is done, SBQQ oprtion calls this method
+    // New Quote is saved
     global void callback(String quote) {
         // save the quote
         SBQQ.ServiceRouter.save('SBQQ.QuoteAPI.QuoteSaver', quote);

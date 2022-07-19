@@ -4,5 +4,4 @@
     <description>Used to declaratively enable/disable debugging features.</description>
     <enableFeeds>false</enableFeeds>
     <label>Debug Settings</label>
-    <visibility>Protected</visibility>
 </CustomObject>

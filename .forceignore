@@ -32,9 +32,9 @@ retrieve
 force-app/main/unpackaged/anon-apex
 
 # CPQ namespaced dependencies to exclude
-!force-app/main/default/objects/SBQQ__Quote__c/fields/Replacement_Quote__c.field-meta.xml
+#force-app/main/default/objects/SBQQ__Quote__c/fields/Replacement_Quote__c.field-meta.xml
 force-app/main/default/featureParameters
-force-app/main/default/objects/SBQQ__Quote__c
+#force-app/main/default/objects/SBQQ__Quote__c
 force-app/main/default/profilePasswordPolicies
 force-app/main/default/profileSessionSettings
 force-app/main/default/layouts

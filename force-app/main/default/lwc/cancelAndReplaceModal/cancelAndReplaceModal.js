@@ -203,10 +203,6 @@ export default class CancelAndReplaceModal extends LightningElement {
         this.isLoading = true;
         amendContracts({ amendContracts: parameterObject })
             .then(res => {
-                var jobsIdsOnly = [];
-                for (var i = 0; i < res.jobs.length; i++) {
-                    jobsIdsOnly.push(res.jobs[i].jobId);
-                }
                 this.resetFormValues();
                 this.isLoading = false;
                 this.unSelectAllContracts();
@@ -218,7 +214,6 @@ export default class CancelAndReplaceModal extends LightningElement {
                         // OK for now, but needs to be quote name
                         quoteName: res.quoteName,
                         opportunityId: res.opportunityId,
-                        jobs: jobsIdsOnly
                     }
                 });
                 // // Dispatches the event.

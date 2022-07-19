@@ -15,7 +15,6 @@ import netAmount from '@salesforce/label/c.netAmount';
 import updating from '@salesforce/label/c.updating';
 import getContracts from '@salesforce/apex/AccountCancelReplaceController.getContracts';
 import getAccounts from '@salesforce/apex/AccountCancelReplaceController.getAccounts';
-import getJobStatus from '@salesforce/apex/AccountCancelReplaceController.getJobStatus';
 import getNamespacePrefix from '@salesforce/apex/CancelAndReplaceUtility.getNamespaceWithUnderScore';
 import { NavigationMixin } from 'lightning/navigation';
 
@@ -217,7 +216,6 @@ export default class ActiveContracts extends NavigationMixin(LightningElement) {
         this.quoteId = event.detail.quoteId;
         this.quoteName = event.detail.quoteName;
         this.opportunityId = event.detail.opportunityId;
-        this.jobs = event.detail.jobs;
 
         for (var i = 0; i < this.listOfSelectedContracts.length; i++) {
             for (var j = 0; j < this.activeContracts.length; j++) {
@@ -270,19 +268,6 @@ export default class ActiveContracts extends NavigationMixin(LightningElement) {
             this.activeContracts[i].customRowClass = "slds-hint-parent";
         }
         this.contractsNotSelected = true;
-    }
-    
-    // This function is used to keep getting jobs' statuses and handle the logic.
-    getJobStatus(jobs) {
-        getJobStatus({
-            jobIds: jobs
-        })
-            .then(res => {
-                this.jobStatuses = res;
-            })
-            .catch(error => {
-                console.log('ERROR GETTING JOB STATUS!' + error);
-            });
     }
 
     handleChildContractsIncluded(event) {

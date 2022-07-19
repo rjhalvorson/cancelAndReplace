@@ -12,12 +12,14 @@ public with sharing class TestUserFactory {
     private static final String PERMSET_CANCEL_AND_REPLACE = 'Salesforce_CPQ_Cancel_and_Replace';
     private static final String PERMSET_CPQ_USER = 'SteelBrickCPQUser';
     private static final String PERMSET_CPQ_ADMIN = 'SteelBrickCPQAdmin';
+    private static final String CPQ_PSL_LABEL = 'Salesforce CPQ License';
     private static final String CPQ_NAMESPACE = 'SBQQ';
-    private static final String PKG_NAMESPACE = 'cpqlabs';
+    private static final String PKG_NAMESPACE = '';
 
     private static final Map<String, Id> mapProfileNameToId = new Map<String, Id>();
     private static Map<UserType, Id> permSetIdByUserTypeMap;
     private static Map<UserType, Id> cpqPermSetIdByUserTypeMap;
+    private static Map<UserType, Id> cpqPermSetLicenseIdByUserTypeMap;
 
     public static Map<UserType, String> permSetNameByUserTypeMap = new Map<UserType, String>{
         UserType.ADMIN => PERMSET_CANCEL_AND_REPLACE,
@@ -27,6 +29,11 @@ public with sharing class TestUserFactory {
     public static Map<UserType, String> cpqPermSetNameByUserTypeMap = new Map<UserType, String>{
         UserType.ADMIN => PERMSET_CPQ_ADMIN,
         UserType.STANDARD => PERMSET_CPQ_USER
+    };
+
+    public static Map<UserType, String> cpqPermSetLicenseLabelByUserTypeMap = new Map<UserType, String>{
+        UserType.ADMIN => CPQ_PSL_LABEL,
+        UserType.STANDARD => CPQ_PSL_LABEL
     };
 
     public enum UserType {
@@ -74,10 +81,13 @@ public with sharing class TestUserFactory {
      */
     public static User createUserWithAdminProfile(UserType usrType, String email) {
         loadPermSets();
+        loadPSLs();
 
         // create the user
         User user = setupUserWithProfile(PROFILE_ADMIN, email);
         insert user;
+        List<PermissionSetLicenseAssign> pslas = addPermissionSetLicensesForUser(user.Id, usrType);
+        insert pslas;
         List<PermissionSetAssignment> assignments = addPermissionSetsForUser(user.Id, usrType);
         insert assignments;
         return user;
@@ -90,10 +100,12 @@ public with sharing class TestUserFactory {
      */
     public static User createUserWithStandardProfile(UserType usrType, String email) {
         loadPermSets();
-
+        loadPSLs();
         // create the user
         User user = setupUserWithProfile(PROFILE_STANDARD, email);
         insert user;
+        List<PermissionSetLicenseAssign> pslas = addPermissionSetLicensesForUser(user.Id, usrType);
+        insert pslas;
         List<PermissionSetAssignment> assignments = addPermissionSetsForUser(user.Id, usrType);
         insert assignments;
         return user;
@@ -188,6 +200,12 @@ public with sharing class TestUserFactory {
         }
     }
 
+    public static void loadPSLs() {
+        if (cpqPermSetLicenseIdByUserTypeMap == null) {
+            cpqPermSetLicenseIdByUserTypeMap = mapPermsetLicenseToUserType(cpqPermSetLicenseLabelByUserTypeMap,getCPQPSLs());
+        }
+    }
+
     public static Map<UserType, Id> mapPermsetToUserType(  Map<UserType, String> permSetUserTypeToName, Map<String, Id> permSetIdByNameMap  ) {
         Map<UserType, Id> userTypeToIdMap = new Map<UserType, Id>();
         for (UserType uType : UserType.values()) {
@@ -196,6 +214,19 @@ public with sharing class TestUserFactory {
 
             if (permSetId != null) {
                 userTypeToIdMap.put(uType, permSetId);
+            }
+        }
+        return userTypeToIdMap;
+    }
+
+    public static Map<UserType, Id> mapPermsetLicenseToUserType(  Map<UserType, String> permSetLicenseUserTypeToLabel, Map<String, Id> permSetLicenseIdByLabelMap  ) {
+        Map<UserType, Id> userTypeToIdMap = new Map<UserType, Id>();
+        for (UserType uType : UserType.values()) {
+            String permSetLicenseLabel = permSetLicenseUserTypeToLabel.get(uType);
+            Id permSetLicenseId = permSetLicenseIdByLabelMap.get(permSetLicenseLabel);
+
+            if (permSetLicenseId != null) {
+                userTypeToIdMap.put(uType, permSetLicenseId);
             }
         }
         return userTypeToIdMap;
@@ -214,6 +245,12 @@ public with sharing class TestUserFactory {
         return getPermissionSets(permSetNameSet, CPQ_NAMESPACE);
     }
 
+    public static Map<String, Id> getCPQPSLs() {
+        Set<String> pslSet = new Set<String>();
+        pslSet.addAll(cpqPermSetLicenseLabelByUserTypeMap.values());
+        return getPermissionSetLicenses(pslSet);
+    }
+
     public static List<PermissionSetAssignment> addPermissionSetsForUser(Id userId, UserType usrType) {
         List<PermissionSetAssignment> permissionSets = new List<PermissionSetAssignment>();
 
@@ -224,6 +261,16 @@ public with sharing class TestUserFactory {
         permissionSets.add(addPermissionSet(userId, cpqPermSetId));
 
         return permissionSets;
+    }
+
+    public static List<PermissionSetLicenseAssign> addPermissionSetLicensesForUser(Id userId, UserType usrType) {
+        List<PermissionSetLicenseAssign> psls = new List<PermissionSetLicenseAssign>();
+
+        Id pslId = cpqPermSetLicenseIdByUserTypeMap.get(usrType);
+
+        psls.add(addPermissionSetLicense(userId, pslId));
+
+        return psls;
     }
 
     /**
@@ -239,6 +286,21 @@ public with sharing class TestUserFactory {
         psa.AssigneeId = userId;
         psa.PermissionSetId = permissionSetId;
         return psa;
+    }
+
+    /**
+     * Add Permission Set License
+     *
+     * @param userId
+     * @param permissionSetLicenseId
+     *
+     * @return fully formed PermissionSetLicenseAssign record
+     **/
+    public static PermissionSetLicenseAssign addPermissionSetLicense(Id userId, Id permissionSetLicenseId) {
+        PermissionSetLicenseAssign psla = new PermissionSetLicenseAssign();
+        psla.AssigneeId = userId;
+        psla.PermissionSetLicenseId = permissionSetLicenseId;
+        return psla;
     }
 
     /**
@@ -263,5 +325,28 @@ public with sharing class TestUserFactory {
         }
 
         return psMap;
+    }
+
+    /**
+     * Get Permission Set Licenses
+     *
+     * @param permissionSetLicenseLabels
+     *
+     * @return Map of PermissionSetLicense.MasterLabel to PermissionSetLicense.Id
+     **/
+    public static Map<String, Id> getPermissionSetLicenses(Set<String> permissionSetLicenseLabels) {
+        System.debug(permissionSetLicenseLabels);
+        List<PermissionSetLicense> psls = [
+            SELECT Id, MasterLabel
+            FROM PermissionSetLicense
+            WHERE MasterLabel IN :permissionSetLicenseLabels
+        ];
+        Map<String, Id> pslMap = new Map<String, Id>();
+
+        for (PermissionSetLicense psl : psls) {
+            pslMap.put(psl.MasterLabel, psl.Id);
+        }
+
+        return pslMap;
     }
 }
